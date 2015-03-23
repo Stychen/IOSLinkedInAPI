@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 #import "LIALinkedInAuthorizationViewController.h"
 #import "NSString+LIAEncode.h"
+#import "MBProgressHUD.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -94,6 +95,10 @@ BOOL handlingRedirectURL;
 
 @implementation LIALinkedInAuthorizationViewController (UIWebViewDelegate)
 
+- (void)webViewDidStartLoad:(UIWebView *)webView {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString *url = [[request URL] absoluteString];
 
@@ -147,6 +152,8 @@ BOOL handlingRedirectURL;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
     // Turn off network activity indicator upon finishing web view load
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
